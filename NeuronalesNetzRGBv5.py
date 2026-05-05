@@ -25,7 +25,6 @@ file_path = os.path.join(os.path.dirname(__file__), "rgb.csv")
 # print("Pfad:", file_path)
 # print("Existiert:", os.path.exists(file_path))
 
-# Falls deine CSV mit ; getrennt ist, nimm stattdessen:
 # all_data = pd.read_csv(file_path, sep=";")
 all_data = pd.read_csv(file_path)
 # print("\nErste Zeilen der CSV:")
@@ -90,7 +89,7 @@ def predict_raw(r, g, b):
     _, _, _, A2 = forward_prop(x)
     return int(A2[0, 0] >= 0.5)
 
-# In deinem Datensatz gilt offenbar:
+# In diesem Datensatz gilt:
 # 1 = dunkle Schrift
 # 0 = helle Schrift
 def predict_text_color(r, g, b):
