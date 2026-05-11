@@ -216,9 +216,29 @@ def show_help():
     print("  test          -> zeigt mehrere zufällige Testfarben")
     print("  test 8        -> zeigt z. B. 8 Testfarben")
     print("  acc           -> zeigt die Testgenauigkeit")
-    print("  exit          -> beendet das Programm")
     print("  R G B         -> z. B. 20 20 20")
+    print("  #FF0000       -> HEX-Code mit #")
+    print("  FF0000        -> HEX-Code ohne #")
+    print("  #0F0          -> HEX-Kurzform")
+    print("  exit          -> beendet das Programm")
     print()
+
+
+def hex_to_rgb(hex_code):
+    hex_code = hex_code.strip().replace("#", "")
+
+# Kurzform wie F0A -> FF00AA
+    if len(hex_code) == 3:
+        hex_code = "".join([c * 2 for c in hex_code])
+
+    if len(hex_code) != 6:
+        raise ValueError("Ungültiger Hex-Code")
+
+    r = int(hex_code[0:2], 16)
+    g = int(hex_code[2:4], 16)
+    b = int(hex_code[4:6], 16)
+
+    return r, g, b
 
 # =========================================
 # 6) Training
@@ -298,8 +318,25 @@ while True:
 
     else:
         try:
-            r, g, b = map(int, user_input.split())
 
+            # HEX-Code erkennen
+            if user_input.startswith("#") or len(user_input.replace("#", "")) in [3, 6]:
+
+                hex_code = user_input.replace("#", "")
+
+                # Kurzform erweitern (#0F0 -> 00FF00)
+                if len(hex_code) == 3:
+                    hex_code = "".join([c * 2 for c in hex_code])
+
+                r = int(hex_code[0:2], 16)
+                g = int(hex_code[2:4], 16)
+                b = int(hex_code[4:6], 16)
+
+            # Normale RGB-Eingabe
+            else:
+                r, g, b = map(int, user_input.split())
+
+            # Werte prüfen
             if not (0 <= r <= 255 and 0 <= g <= 255 and 0 <= b <= 255):
                 print("Bitte nur Werte zwischen 0 und 255 eingeben.")
                 continue
@@ -310,6 +347,9 @@ while True:
             print("Unbekannte Eingabe.")
             print("Beispiele:")
             print("  20 20 20")
+            print("  #FF0000")
+            print("  FF0000")
+            print("  #0F0")
             print("  loss")
             print("  matrix")
             print("  test")
