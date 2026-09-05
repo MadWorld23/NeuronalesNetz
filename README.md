@@ -15,6 +15,7 @@ Es handelt sich dabei um eine **logistische Regression** und nicht um ein vollst
 - Pandas
 - Matplotlib
 - Scikit-learn
+- tkinter
 
 
 
