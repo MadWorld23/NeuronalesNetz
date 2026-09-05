@@ -5,6 +5,11 @@ import matplotlib
 matplotlib.use("TkAgg")   # für Mac/VS Code oft stabiler
 import matplotlib.pyplot as plt
 
+import tkinter as tk
+from tkinter import colorchooser
+
+_picker_root = None 
+
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
@@ -208,6 +213,36 @@ def show_predictions(num_samples=12):
     plt.show(block=False)
     plt.pause(0.1)
 
+    _picker_root = None
+
+def open_color_picker():
+    global _picker_root
+
+    # Hidden Root-Fenster nur einmal erzeugen
+    if _picker_root is None:
+        _picker_root = tk.Tk()
+        _picker_root.withdraw()   # Fenster unsichtbar machen
+
+    result = colorchooser.askcolor(
+        color=None,
+        title="Farbe auswählen"
+    )
+
+    # Benutzer hat abgebrochen -> (None, None)
+    if result is None or result[0] is None:
+        print("Farbauswahl abgebrochen.")
+        return
+
+    rgb_float, _hex = result
+
+    # Farbwerte sind floats 0..1 -> int 0..255
+    r = int(round(rgb_float[0]))
+    g = int(round(rgb_float[1]))
+    b = int(rgb_float[2] if False else int(round(rgb_float[2])))
+
+    print(f"Ausgewählte Farbe: RGB = ({r}, {g}, {b})")
+    show_color_prediction(r, g, b)
+
 def show_help():
     print("\nVerfügbare Befehle:")
     print("  help          -> zeigt diese Hilfe")
@@ -221,6 +256,7 @@ def show_help():
     print("  FF0000        -> HEX-Code ohne #")
     print("  #0F0          -> HEX-Kurzform")
     print("  exit          -> beendet das Programm")
+    print("  picker        -> öffnet den systemweiten Color Picker")
     print()
 
 
@@ -315,6 +351,10 @@ while True:
             show_predictions(int(parts[1]))
         else:
             print("Benutzung: test oder test 8")
+
+
+    elif user_input == "picker":
+        open_color_picker()
 
     else:
         try:
