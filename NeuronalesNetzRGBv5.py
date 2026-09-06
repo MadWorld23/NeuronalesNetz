@@ -213,7 +213,6 @@ def show_predictions(num_samples=12):
     plt.show(block=False)
     plt.pause(0.1)
 
-    _picker_root = None
 
 def open_color_picker():
     global _picker_root
